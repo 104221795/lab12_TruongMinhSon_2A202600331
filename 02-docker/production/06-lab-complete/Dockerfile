@@ -2,7 +2,7 @@
 # Production Dockerfile — Multi-stage, < 500 MB, non-root
 # ============================================================
 
-# Stage 1: Builder - compile dependencies
+# Stage 1: Builder
 FROM python:3.11-slim AS builder
 
 WORKDIR /build
@@ -22,23 +22,18 @@ RUN groupadd -r agent && useradd -r -g agent -d /app agent
 
 WORKDIR /app
 
-# Copy packages from builder - copy entire .local directory
-COPY --from=builder /root/.local /root/.local
+# Copy packages từ builder
+COPY --from=builder /root/.local /home/agent/.local
 
 # Copy application
 COPY app/ ./app/
 COPY utils/ ./utils/
 
-# Install packages as root, then fix ownership
-RUN pip install --no-cache-dir --user -r /app/requirements.txt || true
-RUN cp -r /root/.local/lib/python3.11/site-packages/* /usr/local/lib/python3.11/site-packages/ 2>/dev/null || true
-RUN cp -r /root/.local/bin/* /usr/local/bin/ 2>/dev/null || true
-
 RUN chown -R agent:agent /app
 
 USER agent
 
-ENV PATH=/usr/local/bin:$PATH
+ENV PATH=/home/agent/.local/bin:$PATH
 ENV PYTHONPATH=/app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1

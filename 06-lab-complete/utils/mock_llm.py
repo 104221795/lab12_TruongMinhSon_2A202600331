@@ -44,19 +44,3 @@ def ask(question: str, delay: float = 0.1) -> str:
             return random.choice(responses)
 
     return random.choice(MOCK_RESPONSES["default"])
-
-
-def ask_stream(question: str):
-    """
-    Mock streaming response — yield từng token.
-    """
-
-    response = ask(question)
-
-    # Safety: ensure response is string
-    if not isinstance(response, str):
-        response = str(response)
-
-    for word in response.split():
-        time.sleep(0.05)
-        yield word + " "

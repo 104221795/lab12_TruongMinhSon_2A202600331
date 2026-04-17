@@ -81,8 +81,7 @@ async def security_headers(request: Request, call_next):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     # Ẩn server info
-    if "server" in response.headers:
-        del response.headers["server"]
+    response.headers.pop("server", None)
     return response
 
 
@@ -108,13 +107,7 @@ def login(body: LoginRequest):
     Public endpoint. Đổi username/password lấy JWT token.
     Token hết hạn sau 60 phút.
     """
-    # user = authenticate_user(body.username, body.password)
-    # token = create_token(user["username"], user["role"])
     user = authenticate_user(body.username, body.password)
-
-    if not user:
-     raise HTTPException(status_code=401, detail="Invalid username or password")
-
     token = create_token(user["username"], user["role"])
     return {
         "access_token": token,
@@ -206,4 +199,4 @@ if __name__ == "__main__":
     print("  student / demo123  (10 req/min, $1/day budget)")
     print("  teacher / teach456 (100 req/min, $1/day budget)")
     print(f"\nDocs: http://localhost:{port}/docs\n")
-    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
