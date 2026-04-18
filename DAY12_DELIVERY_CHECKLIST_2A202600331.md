@@ -55,9 +55,7 @@ Create a file `MISSION_ANSWERS.md` with your answers to all exercises:
 ## Part 3: Cloud Deployment
 
 ### Exercise 3.1: Railway deployment
-- URL: https://your-app.railway.app
-- Screenshot: [Link to screenshot in repo]
-
+I put it in the googledrive.txt you can see the prove 
 ## Part 4: API Security
 
 ### Exercise 4.1: API Key Authentication ✅
